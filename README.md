@@ -119,3 +119,95 @@ Responsive Design	The app works well on both mobile and desktop devices
 
 
 
+	 TECH STACK SELECTION: 
+
+• Frontend (UI): 
+o React.js (with Hooks), Tailwind CSS or Material UI for clean, maintainable UI.
+• Backend (API Layer): 
+o Node.js/Express or Java Spring Boot for RESTful API support (optional for To-Do 
+apps needing persistence and multi-user features).
+• Database: 
+o MongoDB for storing tasks; 
+o Redis for caching active user sessions if scaling to multi-user.
+• Authentication & Security: 
+o JWT (JSON Web Tokens) for session management 
+OAuth2.0 if third-party login is need.
+ • Deployment & Infrastructure: 
+o Docker and Kubernetes (or OpenShift) for container orchestration; CI/CD with GitHub 
+Actions/Jenkins.
+
+
+
+
+
+
+
+
+	UI STRUCTURE / API SCHEMA DESIGN : 
+ 
+UI Structure (Page Components) 
+• Home Page : Task list, task categories/filters, search. 
+• Task Details Page: Task info, edit task, mark complete/incomplete. 
+• Add/Edit Task Page: Add new or update existing task. 
+• User Profile/Settings Page: Manage user info (if app is multi-user). 
+ 
+API Schema (RESTful) 
+• POST /api/auth/login – User login.
+ • POST /api/auth/register – User signup.
+ • GET /api/tasks – Fetch all tasks (support pagination, filters).
+ • GET /api/tasks/:id – Fetch task details.
+ • POST /api/tasks – Add new task.
+ • PUT /api/tasks/:id – Update task.
+ • DELETE /api/tasks/:id – Delete task.
+ DATA HANDLING APPROACH:
+
+ • Tasks Data: MongoDB stores all To-Do tasks. Use schemas for task attributes (title, 
+description, status).[5] 
+• Sessions: Optional Redis caching for logged-in user sessions.
+User Data: Store securely in MongoDB with hashed passwords. 
+
+• Concurrency: Use optimistic locking for simultaneous task edits. 
+• Data Security: SSL/TLS for all network traffic; implement basic security standards 
+even in small apps.
+
+App Section	React Component(s)	Backend Module	Database Collection
+Header/Nav	HeaderNav		
+Task List	TaskList, TaskItem	Task Controller	Tasks
+Add/Edit Task	AddTask, EditTask	Task Controller	Tasks
+User Authentication	Login, Register	Auth Controller	Users
+	COMPONENT / MODULE DIAGRAM:
+
+
+
+	BASIC FLOW DIAGRAM: 
+ 
+1. User opens app → UI calls GET /api/tasks
+2. User adds new task → POST /api/tasks
+3. Task added to MongoDB (optionally cached in Redis) 
+4. User marks as completed/edits task → PUT /api/tasks/:id
+5. User deletes task → DELETE /api/tasks/:id
+6. Confirm changes reflected on UI.
+
+
+
+	React Hooks Implementation Example: 
+
+import React, { useState, useEffect } from "react"; 
+function TaskList() { 
+    const [tasks, setTasks] = useState([]); 
+useEffect(() => { 
+    fetch("/api/tasks").then(res => res.json()).then(setTasks); 
+}, []); 
+return ( 
+      <div> 
+          {tasks.map(task => 
+                 <div key={task.id}>{task.title}</div> 
+          )} 
+      </div> 
+     ); 
+  }
+
+
+
+
+
